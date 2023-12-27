@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Checkout{% endblock title %}
+{% block content %}
+{% load static %}
+{% load filterData %}
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" data-setbg="/static/img/breadcrumb.png">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Checkout</h2>
+                        <div class="breadcrumb__option">
+                            <a href="./index.html">Home</a>
+                            <span>Checkout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Checkout Section Begin -->
+    <section class="checkout spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
+                    </h6>
+                </div>
+            </div>
+            <div class="checkout__form">
+                <h4>Billing Details</h4>
+                <form action="#">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-6">
+                            <div class="row">
+                        	
+                        		<div class="col-lg-6 my-2 row"><span class="col-6 font-weight-bold">Firstname</span> <span>{{user.first_name}}</span> </div>
+                        		<div class="col-lg-6 my-2 row"><span class="col-6 font-weight-bold">Lastname</span> <span>{{user.last_name}}</span> </div>
+                        		<div class="col-lg-6 my-2 row"><span class="col-6 font-weight-bold">Email</span> <span>{{user.email}}</span> </div>
+                        	</div>
+                        	<div class="row">
+                        		<div class="col-lg-12 my-2 row"><span class="col-3 font-weight-bold"> Street </span> <span>{{add.street}}</span> </div>
+                        		<div class="col-lg-12 my-2 row"><span class="col-3 font-weight-bold"> Sub-District </span> <span>{{add.subdistrict}}</span> </div>
+                        		<div class="col-lg-12 my-2 row"><span class="col-3 font-weight-bold"> District </span> <span>{{add.district}}</span> </div>
+                        		<div class="col-lg-12 my-2 row"><span class="col-3 font-weight-bold"> State </span> <span>{{add.state}}</span> </div>
+                        		<div class="col-lg-12 my-2 row"><span class="col-3 font-weight-bold"> Pin </span> <span>{{add.pin}}</span> </div>
+                        		
+                        	</div>
+                        </div>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="checkout__order">
+                                <h4>Your Order</h4>
+                                <div class="checkout__order__products">Products <span>Total</span></div>
+                                <ul>
+                                    {% for c in user.cart_set.all  %}
+                                        <li>{{c.product.title}} <span>${% discount_price c.product.price c.product.discount %}</span></li>
+                                    {% endfor %}
+                                </ul>
+                                {% cartTotal user.cart_set.all as total %}
+                                <div class="checkout__order__subtotal">Subtotal <span>${% cartTotal user.cart_set.all %}</span></div>
+                                <div class="checkout__order__total">Total <span>${{total}}</span></div>
+                                {% if total > 0  %}
+                                    <a href="{% url 'create-order' %}" class="site-btn">PLACE ORDER</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- Checkout Section End -->
+{% endblock content %}

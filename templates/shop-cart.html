@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Cart{% endblock title %}
+{% block content %}
+{% load static %}
+{% load filterData %}
+
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-section set-bg" data-setbg="/static/img/breadcrumb.png">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="breadcrumb__text">
+                        <h2>Shopping Cart</h2>
+                        <div class="breadcrumb__option">
+                            <a href="{% url 'home' %}">Home</a>
+                            <span>Shopping Cart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shoping Cart Section Begin -->
+    <section class="shoping-cart spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="shoping__product">Products</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in cart %}
+                                    <tr>
+                                        <td class="shoping__cart__item">
+                                            <a href="/shop/{{c.product.slug}}">
+                                                <img src="/media/{{c.product.image}}" width="80" alt="">
+                                            </a>
+                                            <h5>{{c.product.title}}</h5>
+                                        </td>
+                                        <td class="shoping__cart__price">
+                                            ${% discount_price c.product.price c.product.discount %}
+                                        </td>
+                                        <td class="shoping__cart__quantity">
+                                            {% if c.product.stock > c.quantity %}
+                                                {% comment %} <div class="quantity">
+                                                    <div class="pro-qty">
+                                                        <input type="text" value="{{c.quantity}}">
+                                                    </div>
+                                                </div> {% endcomment %}
+                                                <div class="btn-group" role="group" aria-label="Basic example">
+                                                    <a href="/accounts/cart/update/remove/{{c.id}}" class="btn btn-secondary btn-sm">-</a>
+                                                    <button type="button" class="btn btn-secondary btn-sm"><span>{{c.quantity}}</span></button>
+                                                    <a href="/accounts/cart/update/add/{{c.id}}" class="btn btn-secondary btn-sm">+</a>
+                                                </div>
+                                            {% else %}
+                                                {{c.quantity}}
+                                            {% endif %}
+                                        </td>
+                                        <td class="shoping__cart__total">
+                                            ${% cartSubTotal c.product.price c.product.discount c.quantity %}
+                                            
+                                        </td>
+                                        <td class="shoping__cart__item__close">
+                                            <a href="/cart/remove/{{c.id}}">
+                                                <span class="icon_close"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="shoping__checkout">
+                        <h5>Cart Total</h5>
+                        <ul>
+                            <li>Subtotal <span>${% cartTotal cart %}</span></li>
+                            <li>Total <span>${% cartTotal cart %}</span></li>
+                        </ul>
+                        <a href="{% url 'checkout' %}" class="primary-btn">PROCEED TO CHECKOUT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Shoping Cart Section End -->
+
+{% endblock content %}
